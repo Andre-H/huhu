@@ -9,8 +9,15 @@ var reporter = new HtmlScreenshotReporter({
 exports.config = {
 
 	framework : 'jasmine2',
-
-	seleniumAddress : 'http://192.168.99.100:4444/wd/hub',
+	
+	seleniumServerJar: '../../node_modules/protractor/selenium/selenium-server-standalone-2.40.0.jar',
+	seleniumPort: null,
+	chromeDriver: '../../node_modules/protractor/selenium/chromedriver',
+	
+	//If seleniumAddress is set, seleniumServerJar, seleniumPort and chromeDriver settings will be ignored
+	//and tests will be ran in an already running instance of Selenium server, such as our internal Grid.
+	//Alternatively, this can be set by command line using $ grunt --seleniumAddress http://192.168.99.100:4444/wd/hub
+	//seleniumAddress: 'http://192.168.99.100:4444/wd/hub'	
 
 	capabilities : {
 		browserName : 'chrome'
@@ -35,7 +42,7 @@ exports.config = {
 						return config.capabilities.browserName + '.' + generatedSuiteName;
 					}
 				});
-			jasmine.getEnv().addReporter(junitReporter);
+			jasmine.getEnv().addReporter(junitReporter);			
 		});
 	},
 

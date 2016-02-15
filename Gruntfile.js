@@ -30,9 +30,24 @@ module.exports = function (grunt) {
 					}
 				}
 			}
+		},
+		shell : {
+			options : {
+				stdout : true
+			},
+			protractor_install : {
+				command : 'node ./node_modules/protractor/bin/webdriver-manager update'
+			},
+			npm_install : {
+				command : 'npm install'
+			}
 		}
 
 	});
+
+	grunt.loadNpmTasks('grunt-shell-spawn');
+
+	grunt.registerTask('install', ['shell:npm_install', 'shell:protractor_install']);
 
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 
