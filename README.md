@@ -7,8 +7,10 @@ I think everyone using Protractor to test their AngularJS based web app should b
 - Have XML JUnit format reports consolidated for easy integration with CI such as Jenkins
 - Have a HTML format easily readable report with screen captures
 
-Requirements:
+###Requirements:
+
 1. Install Node.js
+
 2. Install Grunt-cli
 
 ###Give it a go
