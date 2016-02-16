@@ -1,7 +1,6 @@
 describe('testing angular example application', function() {
 
-  
-  it('should pick a phone in the phone selection tool', function() {
+  it('should pick a phone in the phone selection tool |'+browser.browserName+'|'+browser.version, function() {
 
 	browser.get('http://whichphone.withgoogle.com/');
 	
@@ -15,17 +14,9 @@ describe('testing angular example application', function() {
 	
 	element(by.className('umi-story-next-btn')).click();
 	
+	if(browser.browserName != 'chrome'){
+		expect(false).toEqual(true);
+	}
+	
   });
 });
-
-
-	
-	/*
-	var whatsImportantInAPhone = element.all(by.repeater('item in vm.currentFollowUp.answers'));
-	whatsImportantInAPhone.get(1).element(by.className('ng-binding')).click();
-	
-	element(by.className('umi-followup-done')).element(by.tagName('button')).click();	
-	
-	expect(element(by.className('umi-marquee-step')).getText()).toContain('Great! What else?');
-	expect(element(by.className('umi-marquee-step')).getText()).toContain('Two more to go.');
-	*/

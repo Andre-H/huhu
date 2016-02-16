@@ -1,4 +1,6 @@
 # huhu
+###What's this
+
 I think everyone using Protractor to test their AngularJS based web app should be able to easily:
 - Automatically install all node dependencies
 - Run all specs with a single command
@@ -6,6 +8,8 @@ I think everyone using Protractor to test their AngularJS based web app should b
 - Run the same tests in different browsers
 - Have XML JUnit format reports consolidated for easy integration with CI such as Jenkins
 - Have a HTML format easily readable report with screen captures
+
+So this is a gist showing which modules and configurations you need to achieve just that.
 
 ###Requirements:
 
@@ -23,3 +27,10 @@ I think everyone using Protractor to test their AngularJS based web app should b
 
 4. **grunt**
 
+###From here on
+
+Create test specs in tests/e2e/specs
+
+Create page objects in tests/e2e/pageobjects
+
+And test away.
