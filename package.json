@@ -17,6 +17,7 @@
     "jasmine-reporters": "^2.0.0",
     "protractor": "^0.20.1",
     "protractor-jasmine2-screenshot-reporter": "^0.3.0",
+    "protractor-multicapabilities-htmlreporter": "0.0.5",
     "python": "0.0.4"
   }
 }
