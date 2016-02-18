@@ -1,6 +1,7 @@
 var jasmineReporters = require('jasmine-reporters');
 var fs = require('fs');
 var path = require('path');
+var mkdirp = require('mkdirp');
 var jSonReporter = require('protractor-multicapabilities-htmlreporter');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
 
@@ -48,6 +49,12 @@ exports.config = {
 
 	// Setup before any tests start
 	beforeLaunch : function () {
+		var newFolder = "";
+		mkdirp('./target', function(err) {
+			if (err) {
+				console.error(err);
+			}
+		});
 	},
 
 	// Assign the test reporter to each running instance
