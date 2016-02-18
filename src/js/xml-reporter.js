@@ -66,7 +66,7 @@ function generateReport(jsonstr, automationHeader) {
 			testmapper : testmapper,
 			res : passed
 		});
-		elapsedTime += jsonstr[q].duration;
+		elapsedTime += (jsonstr[q].duration / 1000);
 		if (passed != "true") {
 			failCount++;
 		}
@@ -111,7 +111,7 @@ function generateReport(jsonstr, automationHeader) {
 		xw.startElement('testcase');
 		xw.writeAttribute('className', jsonstr[q].description);
 		xw.writeAttribute('name', jsonstr[q].description);
-		xw.writeAttribute('time', jsonstr[q].duration);
+		xw.writeAttribute('time', jsonstr[q].duration / 1000);
 		if (passed != "true") {
 			xw.startElement('failure');
 			xw.writeAttribute('type', 'testfailure');
