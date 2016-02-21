@@ -4,6 +4,26 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var jSonReporter = require('protractor-multicapabilities-htmlreporter');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
+var os = require('os');
+
+
+    function getIpAddress() {
+      var ipAddress = null;
+      var ifaces = os.networkInterfaces();
+
+      function processDetails(details) {
+        if (details.family === 'IPv4' && details.address !== '127.0.0.1' && !ipAddress) {
+          ipAddress = details.address;
+        }
+      }
+
+      for (var dev in ifaces) {
+        ifaces[dev].forEach(processDetails);
+      }
+      return ipAddress;
+    }
+
+
 
 exports.config = {
 
@@ -21,14 +41,17 @@ exports.config = {
 	seleniumAddress : 'http://192.168.99.100:4444/wd/hub',
 
 	//For multiCapabilities (testing in parallel with multiple browsers, use this
-	//NOTE: JUnitXmlReporter does not work with sharding
 	//NOTE: PhantomJS works but is not recommended by Protractor
 	//also, why a fake browser when you can test on the real browser?
-	multiCapabilities : [{
+	
+	multiCapabilities : [
+		{
 			'browserName' : 'chrome',
 			maxInstances : 10,
 			shardTestFiles : true
-		}, {
+		}
+		,
+		{
 			'browserName' : 'firefox',
 			maxInstances : 10,
 			shardTestFiles : true
@@ -36,16 +59,19 @@ exports.config = {
 	],
 
 	maxSessions : 20,
+	
+
 
 	//If multiCapabilities is not desired, use this instead
 	//NOTE: JUnitXmlReporter does not work with sharding
 	/*
 	capabilities : {
 	'browserName' : 'chrome',
-	maxInstances : 1,
-	shardTestFiles : false
+	maxInstances : 20,
+	shardTestFiles : true
 	},
-	 */
+	*/
+	//restartBrowserBetweenTests:true,
 
 	// Setup before any tests start
 	beforeLaunch : function () {
@@ -59,10 +85,30 @@ exports.config = {
 
 	// Assign the test reporter to each running instance
 	onPrepare : function () {
-		return browser.getCapabilities().then(function (cap) {
-			browser.version = cap.caps_.version;
-			browser.browserName = cap.caps_.browserName;
-		});
+		//browser.driver.manage().window().maximize();
+		//return browser.get('http://juliemr.github.io/protractor-demo');
+		 return browser.getProcessedConfig().then(function(config) {
+			// you could use other properties here if you want, such as platform and version
+			var browserName = config.capabilities.browserName;
+
+			var junitReporter = new jasmineReporters.JUnitXmlReporter({
+				consolidateAll: true,
+				savePath: 'testresults',
+				// this will produce distinct xml files for each capability
+				filePrefix: browserName + '-xmloutput',
+				modifySuiteName: function(generatedSuiteName, suite) {
+					// this will produce distinct suite names for each capability,
+					// e.g. 'firefox.login tests' and 'chrome.login tests'
+					return browserName + '.' + generatedSuiteName;
+				}
+			});
+			jasmine.getEnv().addReporter(junitReporter);
+			return browser.getCapabilities().then(function (cap) {
+				browser.version = cap.caps_.version;
+				browser.browserName = cap.caps_.browserName;
+				browser.baseURL = 'http://'+getIpAddress()+':8080/';
+			});
+		});		
 	},
 
 	jasmineNodeOpts : {
@@ -73,7 +119,11 @@ exports.config = {
 		defaultTimeoutInterval : 90000
 	},
 
-	specs : ['./specs/*spec.js'],
+	specs : [
+	'./demo-sites/specs/*spec.js',	
+	//'./new-visual-document/specs/*spec.js',
+	'./login/specs/*spec.js'
+	],
 
 	resultJsonOutputFile : './target/protractor-e2e-results.json',
 	
