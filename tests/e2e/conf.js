@@ -4,6 +4,7 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var jSonReporter = require('protractor-multicapabilities-htmlreporter');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
+var SpecReporter = require('jasmine-spec-reporter');
 var os = require('os');
 
 
@@ -103,6 +104,7 @@ exports.config = {
 				}
 			});
 			jasmine.getEnv().addReporter(junitReporter);
+			jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
 			return browser.getCapabilities().then(function (cap) {
 				browser.version = cap.caps_.version;
 				browser.browserName = cap.caps_.browserName;
@@ -116,11 +118,12 @@ exports.config = {
 		isVerbose : false,
 		showColors : true,
 		includeStackTrace : true,
-		defaultTimeoutInterval : 90000
+		defaultTimeoutInterval : 90000,
+		print: function() {}
 	},
 
 	specs : [
-	'./demo-sites/specs/*spec.js',	
+	//'./demo-sites/specs/*spec.js',	
 	//'./new-visual-document/specs/*spec.js',
 	'./login/specs/*spec.js'
 	],

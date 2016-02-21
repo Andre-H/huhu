@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites>
- <testsuite name="chrome.Protractor Demo App" timestamp="2016-02-21T20:50:15" hostname="localhost" time="7.649" errors="0" tests="1" skipped="0" disabled="0" failures="1">
-  <testcase classname="chrome.Protractor Demo App" name="should add one and two|chrome|48.0.2564.109" time="7.648">
-   <failure type="toEqual" message="Expected &apos;3&apos; to equal &apos;5&apos;."><![CDATA[Error: Failed expectation
-    at Object.<anonymous> (C:\workspace\BasicProtractorGrunt\tests\e2e\demo-sites\specs\supercalculator-suposed-to-fail-spec.js:13:51)
-    at C:\workspace\BasicProtractorGrunt\node_modules\grunt-protractor-runner\node_modules\protractor\node_modules\jasminewd2\index.js:96:23
-    at [object Object].promise.Promise.goog.defineClass.constructor (C:/workspace/BasicProtractorGrunt/node_modules/grunt-protractor-runner/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/../webdriver/promise.js:1056:7)
-    at new wrappedCtr (C:\workspace\BasicProtractorGrunt\node_modules\grunt-protractor-runner\node_modules\protractor\node_modules\selenium-webdriver\lib\goog\base.js:2468:26)
-    at controlFlowExecute (C:\workspace\BasicProtractorGrunt\node_modules\grunt-protractor-runner\node_modules\protractor\node_modules\jasminewd2\index.js:82:18)
-    at [object Object].promise.ControlFlow.goog.defineClass.goog.defineClass.abort_.error.executeNext_.execute_ (C:/workspace/BasicProtractorGrunt/node_modules/grunt-protractor-runner/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/../webdriver/promise.js:2776:14)
-    at [object Object].promise.ControlFlow.goog.defineClass.goog.defineClass.abort_.error.executeNext_ (C:/workspace/BasicProtractorGrunt/node_modules/grunt-protractor-runner/node_modules/protractor/node_modules/selenium-webdriver/lib/goog/../webdriver/promise.js:2758:21)
-    at goog.async.run.processWorkQueue (C:\workspace\BasicProtractorGrunt\node_modules\grunt-protractor-runner\node_modules\protractor\node_modules\selenium-webdriver\lib\goog\async\run.js:124:15)
-    at process._tickCallback (node.js:368:9)]]>
-   </failure>
-  </testcase>
+ <testsuite name="chrome.Test VizFlow Login Functionality" timestamp="2016-02-22T10:34:13" hostname="localhost" time="13.238" errors="0" tests="3" skipped="0" disabled="0" failures="0">
+  <testcase classname="chrome.Test VizFlow Login Functionality" name="should not login with invalid credentials |chrome|48.0.2564.109" time="4.99" />
+  <testcase classname="chrome.Test VizFlow Login Functionality" name="should not login with blank credentials |chrome|48.0.2564.109" time="4.035" />
+  <testcase classname="chrome.Test VizFlow Login Functionality" name="should login with valid credentials |chrome|48.0.2564.109" time="4.212" />
  </testsuite>
 </testsuites>

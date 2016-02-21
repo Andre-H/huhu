@@ -15,6 +15,7 @@
     "grunt-protractor-runner": "^3.0.0",
     "grunt-shell-spawn": "^0.3.10",
     "jasmine-reporters": "^2.0.0",
+    "jasmine-spec-reporter": "^2.4.0",
     "mkdirp": "^0.5.1",
     "protractor": "^0.20.1",
     "protractor-multicapabilities-htmlreporter": "0.0.5",
