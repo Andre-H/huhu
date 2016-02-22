@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<testsuites>
- <testsuite name="firefox.Test VizFlow Login Functionality" timestamp="2016-02-22T10:34:15" hostname="localhost" time="10.208" errors="0" tests="3" skipped="0" disabled="0" failures="0">
-  <testcase classname="firefox.Test VizFlow Login Functionality" name="should not login with invalid credentials |firefox|44.0" time="3.264" />
-  <testcase classname="firefox.Test VizFlow Login Functionality" name="should not login with blank credentials |firefox|44.0" time="2.9" />
-  <testcase classname="firefox.Test VizFlow Login Functionality" name="should login with valid credentials |firefox|44.0" time="4.043" />
- </testsuite>
-</testsuites>

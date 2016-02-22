@@ -1,30 +1,28 @@
-var jasmineReporters = require('jasmine-reporters');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
+var jasmineReporters = require('jasmine-reporters');
 var jSonReporter = require('protractor-multicapabilities-htmlreporter');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
+var DecoReporter = require('../../src/js/screenshot-reporter.js');
 var SpecReporter = require('jasmine-spec-reporter');
 var os = require('os');
 
+function getIpAddress() {
+	var ipAddress = null;
+	var ifaces = os.networkInterfaces();
 
-    function getIpAddress() {
-      var ipAddress = null;
-      var ifaces = os.networkInterfaces();
+	function processDetails(details) {
+		if (details.family === 'IPv4' && details.address !== '127.0.0.1' && !ipAddress) {
+			ipAddress = details.address;
+		}
+	}
 
-      function processDetails(details) {
-        if (details.family === 'IPv4' && details.address !== '127.0.0.1' && !ipAddress) {
-          ipAddress = details.address;
-        }
-      }
-
-      for (var dev in ifaces) {
-        ifaces[dev].forEach(processDetails);
-      }
-      return ipAddress;
-    }
-
-
+	for (var dev in ifaces) {
+		ifaces[dev].forEach(processDetails);
+	}
+	return ipAddress;
+}
 
 exports.config = {
 
@@ -44,15 +42,12 @@ exports.config = {
 	//For multiCapabilities (testing in parallel with multiple browsers, use this
 	//NOTE: PhantomJS works but is not recommended by Protractor
 	//also, why a fake browser when you can test on the real browser?
-	
-	multiCapabilities : [
-		{
+
+	multiCapabilities : [{
 			'browserName' : 'chrome',
 			maxInstances : 10,
 			shardTestFiles : true
-		}
-		,
-		{
+		}, {
 			'browserName' : 'firefox',
 			maxInstances : 10,
 			shardTestFiles : true
@@ -60,8 +55,6 @@ exports.config = {
 	],
 
 	maxSessions : 20,
-	
-
 
 	//If multiCapabilities is not desired, use this instead
 	//NOTE: JUnitXmlReporter does not work with sharding
@@ -71,13 +64,13 @@ exports.config = {
 	maxInstances : 20,
 	shardTestFiles : true
 	},
-	*/
+	 */
 	//restartBrowserBetweenTests:true,
 
 	// Setup before any tests start
 	beforeLaunch : function () {
 		var newFolder = "";
-		mkdirp('./target', function(err) {
+		mkdirp('./target/screenshots', function (err) {
 			if (err) {
 				console.error(err);
 			}
@@ -86,31 +79,28 @@ exports.config = {
 
 	// Assign the test reporter to each running instance
 	onPrepare : function () {
+		jasmine.getEnv().addReporter(
+			new DecoReporter({
+				savePath : 'target/screenshots'
+			}));
+
 		//browser.driver.manage().window().maximize();
-		//return browser.get('http://juliemr.github.io/protractor-demo');
-		 return browser.getProcessedConfig().then(function(config) {
+
+		return browser.getProcessedConfig().then(function (config) {
 			// you could use other properties here if you want, such as platform and version
+			
 			var browserName = config.capabilities.browserName;
 
-			var junitReporter = new jasmineReporters.JUnitXmlReporter({
-				consolidateAll: true,
-				savePath: 'testresults',
-				// this will produce distinct xml files for each capability
-				filePrefix: browserName + '-xmloutput',
-				modifySuiteName: function(generatedSuiteName, suite) {
-					// this will produce distinct suite names for each capability,
-					// e.g. 'firefox.login tests' and 'chrome.login tests'
-					return browserName + '.' + generatedSuiteName;
-				}
-			});
-			jasmine.getEnv().addReporter(junitReporter);
-			jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace: 'all'}));
+			jasmine.getEnv().addReporter(new SpecReporter({
+					displayStacktrace : 'all'
+				}));
+
 			return browser.getCapabilities().then(function (cap) {
 				browser.version = cap.caps_.version;
 				browser.browserName = cap.caps_.browserName;
-				browser.baseURL = 'http://'+getIpAddress()+':8080/';
+				browser.baseURL = 'http://' + getIpAddress() + ':8080/';
 			});
-		});		
+		});
 	},
 
 	jasmineNodeOpts : {
@@ -123,19 +113,18 @@ exports.config = {
 	},
 
 	specs : [
-	//'./demo-sites/specs/*spec.js',	
-	//'./new-visual-document/specs/*spec.js',
-	'./login/specs/*spec.js'
+		'./demo-sites/specs/*spec.js',
+		//'./new-visual-document/specs/*spec.js',
+		'./login/specs/*spec.js'
 	],
 
 	resultJsonOutputFile : './target/protractor-e2e-results.json',
-	
+
 	afterLaunch : function (exitCode) {
 		return new Promise(function (resolve) {
 			jSonReporter.generateHtmlReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.html');
 			jSonXMLReporter.generateXMLReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.xml');
 		});
-	}	
+	}
 
 };
-
