@@ -6,10 +6,9 @@
   "scripts": {
     "test": "test:e2e"
   },
-  "author": "Andre Viz",
+  "author": "Andre-H",
   "license": "ISC",
   "devDependencies": {
-    "cucumber-html-report": "^0.2.2",
     "grunt": "^0.4.5",
     "grunt-cli": "^0.1.13",
     "grunt-contrib-jshint": "^0.12.0",
@@ -19,11 +18,9 @@
     "jasmine-spec-reporter": "^2.4.0",
     "mkdirp": "^0.5.1",
     "protractor": "^0.20.1",
-    "protractor-html-screenshot-reporter": "0.0.21",
-    "protractor-jasmine2-html-reporter": "0.0.6",
     "protractor-multicapabilities-htmlreporter": "0.0.5",
     "protractor-screenshot-reporter": "0.0.5",
-    "python": "0.0.4",
+    "q": "^1.4.1",
     "xml-writer": "^1.6.0"
   }
 }

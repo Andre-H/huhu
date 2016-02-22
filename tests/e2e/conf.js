@@ -4,20 +4,19 @@ var mkdirp = require('mkdirp');
 var jasmineReporters = require('jasmine-reporters');
 var jSonReporter = require('protractor-multicapabilities-htmlreporter');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
-var DecoReporter = require('../../src/js/screenshot-reporter.js');
+var ScreenshotReporter = require('../../src/js/screenshot-reporter.js');
 var SpecReporter = require('jasmine-spec-reporter');
 var os = require('os');
+var waitPlugin = require('../../src/js/wait-plugin.js');
 
 function getIpAddress() {
 	var ipAddress = null;
 	var ifaces = os.networkInterfaces();
-
 	function processDetails(details) {
 		if (details.family === 'IPv4' && details.address !== '127.0.0.1' && !ipAddress) {
 			ipAddress = details.address;
 		}
 	}
-
 	for (var dev in ifaces) {
 		ifaces[dev].forEach(processDetails);
 	}
@@ -27,6 +26,11 @@ function getIpAddress() {
 exports.config = {
 
 	framework : 'jasmine2',
+
+	plugins : [{
+			path : '../../src/js/wait-plugin.js'
+		}
+	],
 
 	seleniumServerJar : '../../node_modules/protractor/selenium/selenium-server-standalone-2.40.0.jar',
 
@@ -43,15 +47,18 @@ exports.config = {
 	//NOTE: PhantomJS works but is not recommended by Protractor
 	//also, why a fake browser when you can test on the real browser?
 
-	multiCapabilities : [{
+	multiCapabilities : [
+		{
 			'browserName' : 'chrome',
-			maxInstances : 10,
-			shardTestFiles : true
-		}, {
-			'browserName' : 'firefox',
-			maxInstances : 10,
+			maxInstances : 2,
 			shardTestFiles : true
 		}
+		//,
+		//{
+		//	'browserName' : 'firefox',
+		//	maxInstances : 2,
+		//	shardTestFiles : true
+		//}
 	],
 
 	maxSessions : 20,
@@ -79,8 +86,9 @@ exports.config = {
 
 	// Assign the test reporter to each running instance
 	onPrepare : function () {
+
 		jasmine.getEnv().addReporter(
-			new DecoReporter({
+			new ScreenshotReporter({
 				savePath : 'target/screenshots'
 			}));
 
@@ -88,7 +96,7 @@ exports.config = {
 
 		return browser.getProcessedConfig().then(function (config) {
 			// you could use other properties here if you want, such as platform and version
-			
+
 			var browserName = config.capabilities.browserName;
 
 			jasmine.getEnv().addReporter(new SpecReporter({
@@ -103,18 +111,20 @@ exports.config = {
 		});
 	},
 
+	onComplete : function () {
+		return waitPlugin.resolve();
+	},
+
 	jasmineNodeOpts : {
-		onComplete : null,
 		isVerbose : false,
 		showColors : true,
 		includeStackTrace : true,
 		defaultTimeoutInterval : 90000,
-		print: function() {}
+		print : function () {}
 	},
 
 	specs : [
 		'./demo-sites/specs/*spec.js',
-		//'./new-visual-document/specs/*spec.js',
 		'./login/specs/*spec.js'
 	],
 
@@ -122,6 +132,7 @@ exports.config = {
 
 	afterLaunch : function (exitCode) {
 		return new Promise(function (resolve) {
+			console.log('jasmine afterLaunch');
 			jSonReporter.generateHtmlReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.html');
 			jSonXMLReporter.generateXMLReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.xml');
 		});

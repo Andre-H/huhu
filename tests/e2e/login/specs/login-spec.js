@@ -14,8 +14,8 @@ describe('Test VizFlow Login Functionality', function () {
 		loginPage.login('admin', '');
 		expect(loginPage.getLoginFormMessage()).toContain('Please login');
 	});
-
-	it('should login with valid credentials |' + browser.browserName + '|' + browser.version, function () {
+	
+	it(' should login with valid credentials |' + browser.browserName + '|' + browser.version, function () {
 		browser.get(browser.baseURL + 'ui/HTML5/#/login');
 		loginPage.login('admin', 'developer');
 		expect(welcomePage.getSearchResultMessage()).toMatch('No Mosaic Reports available');
