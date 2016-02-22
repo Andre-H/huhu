@@ -14,7 +14,7 @@ describe('testing angular example application', function() {
 	
 	element(by.className('umi-story-next-btn')).click();
 	
-	expect(browserName).toEqual('chrome');
+	expect(browser.browserName).toEqual('chrome');
 	
   });
 });
