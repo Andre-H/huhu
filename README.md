@@ -5,7 +5,7 @@ I think everyone using Protractor to test their AngularJS web app should be able
 - Run the same tests once in each different browser (multi capabilities)
 - For each browser type they have, run their test specs in parallel (file sharding)
 - For this setup, have a XML JUnit format report already consolidated for easy integration with CI such as Jenkins
-- For this setup, have a HTML format report easily readable to summarize execution and with screen captures for every test
+- For this setup, have a HTML format report easily readable to summarize execution and with screen captures
 - Be able to run all tests in this setup with a simple command (we used grunt)
 
 So this is a gist showing how to achieve just that.
