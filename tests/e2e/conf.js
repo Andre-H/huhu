@@ -46,19 +46,19 @@ exports.config = {
 	//For multiCapabilities (testing in parallel with multiple browsers, use this
 	//NOTE: PhantomJS works but is not recommended by Protractor
 	//also, why a fake browser when you can test on the real browser?
-
+	
 	multiCapabilities : [
-		{
-			'browserName' : 'chrome',
-			maxInstances : 2,
-			shardTestFiles : true
-		}
-		//,
-		//{
-		//	'browserName' : 'firefox',
-		//	maxInstances : 2,
-		//	shardTestFiles : true
-		//}
+	{
+		'browserName' : 'chrome',
+		maxInstances : 2,
+		shardTestFiles : true
+	}
+	,
+	{
+		'browserName' : 'firefox',
+		maxInstances : 2,
+		shardTestFiles : true
+	}
 	],
 
 	maxSessions : 20,
@@ -67,11 +67,11 @@ exports.config = {
 	//NOTE: JUnitXmlReporter does not work with sharding
 	/*
 	capabilities : {
-	'browserName' : 'chrome',
-	maxInstances : 20,
-	shardTestFiles : true
+		'browserName' : 'chrome',
+		maxInstances : 20,
+		shardTestFiles : true
 	},
-	 */
+	*/
 	//restartBrowserBetweenTests:true,
 
 	// Setup before any tests start
@@ -87,6 +87,8 @@ exports.config = {
 	// Assign the test reporter to each running instance
 	onPrepare : function () {
 
+		require('protractor-linkuisref-locator')(protractor);
+
 		jasmine.getEnv().addReporter(
 			new ScreenshotReporter({
 				savePath : 'target/screenshots'
@@ -97,8 +99,10 @@ exports.config = {
 		return browser.getProcessedConfig().then(function (config) {
 			// you could use other properties here if you want, such as platform and version
 
+			//not used anywhere
 			var browserName = config.capabilities.browserName;
 
+			//why is this here?
 			jasmine.getEnv().addReporter(new SpecReporter({
 					displayStacktrace : 'all'
 				}));
@@ -116,7 +120,7 @@ exports.config = {
 	},
 
 	jasmineNodeOpts : {
-		isVerbose : false,
+		isVerbose : true,
 		showColors : true,
 		includeStackTrace : true,
 		defaultTimeoutInterval : 90000,
@@ -124,7 +128,7 @@ exports.config = {
 	},
 
 	specs : [
-		'./demo-sites/specs/*spec.js',
+		//'./demo-sites/specs/*spec.js',
 		'./login/specs/*spec.js'
 	],
 

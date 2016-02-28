@@ -1,4 +1,5 @@
 'use strict';
+var userMenu = require('./userMenu.pageobject.js');
 
 module.exports = {
 
@@ -9,51 +10,40 @@ module.exports = {
 		loginButton : element(by.buttonText('Login')),
 		alertMessageField : element(by.css('body > div > div > div > div:nth-child(2) > form > div.alert.alert-danger.ng-binding')),
 		loginFormMessageField : element(by.css('body > div > div > div > div:nth-child(2) > form > h3')),
-		navbarUserButton : element(by.css('body > div > div > div > div.ng-scope > nav > div > div.collapse.navbar-collapse > ul > li.ng-scope > button')),
-		navbarUserContextMenuSystemInfoButton : element(by.linkText(' System Info ...')),
-		navbarUserContextMenuLoginButton : element(by.linkText(' Login ...')),
-		systemInfoJenkinsJobField : element(by.model('systemInfo.frontEndBuildInfo.jenkinsJobName')),
-		closeSystemInformationButton : element(by.buttonText('Close '))
+		serverField : element(by.css('body > div > div > div > div:nth-child(2) > form > div.btn-group.margin-bottom.btn-block > button'))
 	},
 
 	login : function (username, password) {
 		var loginPage = this.loginPage;
 
+		loginPage.usernameField.clear();
+		loginPage.passwordField.clear();
 		loginPage.usernameField.sendKeys(username);
 		loginPage.passwordField.sendKeys(password);
 		loginPage.loginButton.click();
 	},
 
-	gotoSystemInformation : function () {
-		var loginPage = this.loginPage;
-
-		loginPage.navbarUserButton.click();
-		loginPage.navbarUserContextMenuSystemInfoButton.click();
+	gotoSystemInfoPage : function () {
+		userMenu.gotoSystemInfoPage();
 	},
 
-	getSystemInfoJenkinsJob : function () {
-		var loginPage = this.loginPage;
-
-		return loginPage.systemInfoJenkinsJobField.getText();
-	},
-
-	gotoLoginForm : function () {
-		var loginPage = this.loginPage;
-
-		loginPage.navbarUserButton.click();
-		loginPage.navbarUserContextMenuLoginButton.click();
-	},
-	
 	getAlertMessage : function () {
 		var loginPage = this.loginPage;
-		
+
 		return loginPage.alertMessageField.getText();
 	},
-	
+
 	getLoginFormMessage : function () {
 		var loginPage = this.loginPage;
-		
+
 		return loginPage.loginFormMessageField.getText();
+	},
+
+	selectServer : function () {
+		var loginPage = this.loginPage;
+
+		loginPage.serverField.click();
+		element.all(by.repeater('domain in serverService.getServers()')).get(6).click(); //'http://tearo.internal.bis2.net:54444 '
 	}
-	
+
 };

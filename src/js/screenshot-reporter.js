@@ -27,9 +27,11 @@ function sanitizeFilename(name) {
 	return name.replace(/[^a-zA-Z0-9\-]/gi, ''); // Strip any special charactere
 }
 
-/** Class: DecoReporter
+suites = [];
+
+/** Class: ScreenshotReporter
  */
-function DecoReporter() {
+function ScreenshotReporter() {
 
 	var self = this;
 
@@ -39,30 +41,45 @@ function DecoReporter() {
 	this.docName = 'report.html';
 
 	var fs = require('fs');
+
 	function writeScreenShot(data, filename) {
 		var stream = fs.createWriteStream(filename);
 		stream.write(new Buffer(data, 'base64'));
 		stream.end();
 	}
+	function extend(dupe, obj) { // performs a shallow copy of all props of `obj` onto `dupe`
+		for (var prop in obj) {
+			if (obj.hasOwnProperty(prop)) {
+				dupe[prop] = obj[prop];
+			}
+		}
+		return dupe;
+	}
 
-	self.jasmineStarted = function (summary) {
-		//console.log('jasmineStarted');
-	};
+	var __suites = {},
+	__specs = {};
+
+	function getSuite(suite) {
+		__suites[suite.id + browser.browserName] = extend(__suites[suite.id + browser.browserName] || {}, suite);
+		return __suites[suite.id + browser.browserName];
+	}
+	function getSpec(spec) {
+		__specs[spec.id] = extend(__specs[spec.id] || {}, spec);
+		return __specs[spec.id];
+	}
+
+	self.jasmineStarted = function (summary) {};
 	self.suiteStarted = function (suite) {
-		//console.log('suiteStarted - suite:'+JSON.stringify(suite, null, 4));
+		suite = getSuite(suite);
+		suites.push(suite);
 	};
-	self.specStarted = function (spec) {
-		//console.log('specStarted - spec:'+JSON.stringify(spec, null, 4));
-	};
+	self.specStarted = function (spec) {};
 	self.specDone = function (spec) {
-
-		//console.log('specDone - spec.description:'+spec.description+' browser.takeScreenshot:'+browser.takeScreenshot);//JSON.stringify(spec, null, 4));
-
 		browser.takeScreenshot().then(function (png) {
 			writeScreenShot(png, 'target/screenshots/' + sanitizeFilename(spec.description) + '.png');
 		});
 		/*
-		var speco = {
+		var aSpecLooksLikeThis = {
 		"id": "spec2",
 		"description": "should login with valid credentials |undefined|undefined",
 		"fullName": "Test VizFlow Login Functionality should login with valid credentials |undefined|undefined",
@@ -81,12 +98,8 @@ function DecoReporter() {
 		 */
 
 	};
-	self.suiteDone = function (suite) {
-		//console.log('suiteDone - suite'+JSON.stringify(suite, null, 4));
-	};
-	self.jasmineDone = function () {
-		//console.log('jasmineDone');
-	};
+	self.suiteDone = function (suite) {};
+	self.jasmineDone = function () {};
 
 	return this;
 }
@@ -98,7 +111,8 @@ function DecoReporter() {
  * Parameters:
  *     (Object) spec - The test spec to report.
  */
-DecoReporter.prototype.reportSpecResults =
+
+ScreenshotReporter.prototype.reportSpecResults =
 
 function reportSpecResults(spec) {
 	/* global browser */
@@ -160,4 +174,4 @@ function reportSpecResults(spec) {
 
 };
 
-module.exports = DecoReporter;
+module.exports = ScreenshotReporter;
