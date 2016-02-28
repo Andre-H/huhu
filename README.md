@@ -1,7 +1,7 @@
 # huhu
 ###What's this
 
-I think everyone using Protractor to test their AngularJS web app should be able to easily:
+I think everyone using Protractor to test their AngularJS web app should be able to straightaway:
 - Run the same tests once in each different browser (multi capabilities)
 - For each browser type they have, run their test specs in parallel (file sharding)
 - For this setup, have a XML JUnit format report already consolidated for easy integration with CI such as Jenkins
