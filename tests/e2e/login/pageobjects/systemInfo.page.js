@@ -10,8 +10,7 @@ module.exports = {
 	getSystemInfoJenkinsJob : function () {
 		var systemInfoPage = this.systemInfoPage;
 
-		return systemInfoPage.systemInfoJenkinsJobField.getAttribute('value').then(
-			function (value) {
+		return systemInfoPage.systemInfoJenkinsJobField.getAttribute('value').then(function (value) {
 			return value;
 		});
 	},

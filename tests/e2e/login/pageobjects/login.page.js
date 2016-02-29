@@ -39,11 +39,16 @@ module.exports = {
 		return loginPage.loginFormMessageField.getText();
 	},
 
-	selectServer : function () {
+	selectServer : function (serverDescription) {
 		var loginPage = this.loginPage;
 
 		loginPage.serverField.click();
-		element.all(by.repeater('domain in serverService.getServers()')).get(6).click(); //'http://tearo.internal.bis2.net:54444 '
+		var menuElements = element.all(by.repeater('domain in serverService.getServers()'));
+		return menuElements.filter(function(elem){
+			return elem.getText().then(function(text){
+				return serverDescription.match(text);
+			});
+		}).click();
 	}
 
 };

@@ -12,6 +12,10 @@ module.exports = {
 
 		return welcomePage.emptySearchResultsPane.getText();
 	},
+	
+	getAllUserMenuOptions: function () {
+		return userMenu.getAllOptions();
+	},
 
 	logout : function () {
 		userMenu.logout();
