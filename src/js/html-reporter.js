@@ -141,9 +141,9 @@ function sanitizeFilename(name){
 		result += '<table class="hovertable" cellpadding="10" cellspacing="5">';
 
             var kk = unique.sort();
-            result += '<tr><td class="brk" style="background-color:burlywood;"><b>Test#</b></td><td class="brk" style="background-color:burlywood;"><b>TestName</b></td>';
+            result += '<tr><td class="brk" style="background-color: burlywood;"><b>Test#</b></td><td class="brk" style="background-color: burlywood;"><b>TestName</b></td>';
             for (var l = 0; l < unique.length; l++) {
-                result += '<td class="brk" style="background-color:burlywood;"><b>' + unique[l] + '</b></td>';
+                result += '<td class="brk" style="background-color: burlywood;"><b>' + unique[l] + '</b></td>';
             }
             result += '</tr>';
 
