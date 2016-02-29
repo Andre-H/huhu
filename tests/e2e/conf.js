@@ -1,12 +1,13 @@
+var os = require('os');
 var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var jasmineReporters = require('jasmine-reporters');
+var SpecReporter = require('jasmine-spec-reporter');
 var jSonHTMLReporter = require('../../src/js/html-reporter.js');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
-var ScreenshotReporter = require('../../src/js/screenshot-reporter.js');
-var SpecReporter = require('jasmine-spec-reporter');
-var os = require('os');
+var HTMLScreenshotReporter = require('../../src/js/html-reporter.js');
+var htmlReporter = new HTMLScreenshotReporter({savePath : 'screenshots/'});
 var waitPlugin = require('../../src/js/wait-plugin.js');
 
 function getIpAddress() {
@@ -64,7 +65,6 @@ exports.config = {
 	maxSessions : 20,
 
 	//If multiCapabilities is not desired, use this instead
-	//NOTE: JUnitXmlReporter does not work with sharding
 	/*
 	capabilities : {
 		'browserName' : 'chrome',
@@ -72,6 +72,8 @@ exports.config = {
 		shardTestFiles : true
 	},
 	*/
+	
+	//Restarting your browser between every test ensures independency at the cost of total execution time
 	//restartBrowserBetweenTests:true,
 
 	// Setup before any tests start
@@ -84,29 +86,19 @@ exports.config = {
 		});
 	},
 
-	// Assign the test reporter to each running instance
 	onPrepare : function () {
 
 		require('protractor-linkuisref-locator')(protractor);
 
-		jasmine.getEnv().addReporter(
-			new ScreenshotReporter({
-				savePath : 'target/screenshots'
-			}));
-
-		//browser.driver.manage().window().maximize();
+		// Assign the test reporters to each running instance
+		
+		jasmine.getEnv().addReporter(htmlReporter);
+		
+		jasmine.getEnv().addReporter(new SpecReporter({displayStacktrace : 'all'}));
+		
+		//Provide browser with capability information so specs can access it
 
 		return browser.getProcessedConfig().then(function (config) {
-			// you could use other properties here if you want, such as platform and version
-
-			//not used anywhere
-			var browserName = config.capabilities.browserName;
-
-			//why is this here?
-			jasmine.getEnv().addReporter(new SpecReporter({
-					displayStacktrace : 'all'
-				}));
-
 			return browser.getCapabilities().then(function (cap) {
 				browser.version = cap.caps_.version;
 				browser.browserName = cap.caps_.browserName;
@@ -115,6 +107,7 @@ exports.config = {
 		});
 	},
 
+	//Ensure Protractor does not closes browser until all reporting is done (including taking screenshots)
 	onComplete : function () {
 		return waitPlugin.resolve();
 	},
@@ -134,10 +127,11 @@ exports.config = {
 
 	resultJsonOutputFile : './target/protractor-e2e-results.json',
 
+	//Post process
 	afterLaunch : function (exitCode) {
 		return new Promise(function (resolve) {
 			console.log('jasmine afterLaunch');
-			jSonHTMLReporter.generateHtmlReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.html');
+			htmlReporter.generateHtmlReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.html');
 			jSonXMLReporter.generateXMLReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.xml');
 		});
 	}
