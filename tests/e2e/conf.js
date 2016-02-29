@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var mkdirp = require('mkdirp');
 var jasmineReporters = require('jasmine-reporters');
-var jSonReporter = require('protractor-multicapabilities-htmlreporter');
+var jSonHTMLReporter = require('../../src/js/html-reporter.js');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
 var ScreenshotReporter = require('../../src/js/screenshot-reporter.js');
 var SpecReporter = require('jasmine-spec-reporter');
@@ -137,7 +137,7 @@ exports.config = {
 	afterLaunch : function (exitCode) {
 		return new Promise(function (resolve) {
 			console.log('jasmine afterLaunch');
-			jSonReporter.generateHtmlReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.html');
+			jSonHTMLReporter.generateHtmlReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.html');
 			jSonXMLReporter.generateXMLReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', './target/protractor-e2e-report.xml');
 		});
 	}
