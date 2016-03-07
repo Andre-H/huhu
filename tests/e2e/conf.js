@@ -18,12 +18,13 @@ exports.config = {
 	//If seleniumAddress is set, seleniumServerJar, seleniumPort and chromeDriver settings will be ignored
 	//and tests will be ran in an already running instance of Selenium server, such as our internal Grid.
 	//Alternatively, this can be set by command line using $ grunt --seleniumAddress http://192.168.99.100:4444/wd/hub
-	seleniumAddress : 'http://192.168.99.100:4444/wd/hub',
+	//seleniumAddress : 'http://192.168.99.100:4444/wd/hub',
 
 	//For multiCapabilities (testing in parallel with multiple browsers, use this
 	//NOTE: JUnitXmlReporter does not work with sharding
 	//NOTE: PhantomJS works but is not recommended by Protractor
 	//also, why a fake browser when you can test on the real browser?
+	/*
 	multiCapabilities : [{
 			'browserName' : 'chrome',
 			maxInstances : 10,
@@ -34,18 +35,17 @@ exports.config = {
 			shardTestFiles : true
 		}
 	],
-
+	*/
+	
 	maxSessions : 20,
 
 	//If multiCapabilities is not desired, use this instead
 	//NOTE: JUnitXmlReporter does not work with sharding
-	/*
 	capabilities : {
-	'browserName' : 'chrome',
-	maxInstances : 1,
-	shardTestFiles : false
+		'browserName' : 'chrome',
+		maxInstances : 1,
+		shardTestFiles : false
 	},
-	 */
 
 	// Setup before any tests start
 	beforeLaunch : function () {

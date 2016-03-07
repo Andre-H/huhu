@@ -33,3 +33,6 @@ Create test specs in tests/e2e/specs
 Create page objects in tests/e2e/pageobjects
 
 And test away.
+
+##What is a huhu?
+The huhu is the morepork owl http://www.doc.govt.nz/nature/native-animals/birds/birds-a-z/morepork-ruru/ In Maori tradition this owl is seen as a guardian, its "hu-hu" chant can mean a good sign of things to come or its high pitched cry can mean bad news.
