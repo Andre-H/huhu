@@ -11,21 +11,6 @@ const targetDir = 'target';
 const htmlReportDestPath = './' + targetDir + '/protractor-e2e-report.html';
 const xmlReportDestPath = './' + targetDir + '/protractor-e2e-report.xml';
 
-//Returns the IP of the machine running Protractor, or else, localhost, useful for development testing
-function getIpAddress() {
-	var ipAddress = null;
-	var ifaces = os.networkInterfaces();
-	function processDetails(details) {
-		if (details.family === 'IPv4' && details.address !== '127.0.0.1' && !ipAddress) {
-			ipAddress = details.address;
-		}
-	}
-	for (var dev in ifaces) {
-		ifaces[dev].forEach(processDetails);
-	}
-	return ipAddress;
-}
-
 exports.config = {
 
 	framework : 'jasmine2',
@@ -56,7 +41,7 @@ exports.config = {
 	 * If passed by command line it will override the setting in this file.
 	 * Otherwise defaults to the IP of the machine that is running Protractor.
 	 */
-	baseUrl : 'http://' + getIpAddress() + ':8080/',
+	baseUrl : 'http://juliemr.github.io',
 
 	/*
 	 * For multiCapabilities (testing in parallel with multiple browsers, use this
@@ -126,8 +111,8 @@ exports.config = {
 		//Provide browser with capability information so that all specs can access it
 		return browser.getProcessedConfig().then(function (config) {
 			return browser.getCapabilities().then(function (cap) {
-				browser.version = cap.caps_.version;
-				browser.browserName = cap.caps_.browserName;
+				browser.version = cap.get('version');
+				browser.browserName = cap.get('browserName');
 				browser.baseUrl  = config.baseUrl;
 			});
 		});

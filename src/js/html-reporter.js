@@ -1,4 +1,7 @@
 /*jshint node:true*/
+/*
+ Based on https://github.com/raghulraj/protractor-multicapabilities-htmlreporter
+ */
 'use strict';
 var fs = require('fs');
 var path = require('path');

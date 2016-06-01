@@ -3,7 +3,7 @@ var examplePage = require('../pageobjects/example.page.js');
 describe('Example Functionality - Super Calculator', function () {
 
 	beforeEach(function(){
-		browser.get('http://juliemr.github.io/protractor-demo/');
+		browser.get('/protractor-demo');//uses baseUrl from confiuration
 	});
 
 	it('should add 1 and 2', function () {
