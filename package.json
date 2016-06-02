@@ -1,12 +1,12 @@
 {
-  "name": "protractor-example",
-  "version": "0.1.0",
-  "description": "Example project to show Protractor working",
+  "name": "protractor-multi-browsers-sharding-with-reporters",
+  "version": "0.1.1",
+  "description": "Example project to show Protractor working in parallel, with multi browsers and reporting with screenshots and XML",
   "main": "index.js",
   "scripts": {
     "test": "test:e2e"
   },
-  "author": "Andre Viz",
+  "author": "Andre Hulse",
   "license": "ISC",
   "devDependencies": {
     "grunt": "^0.4.5",
@@ -15,10 +15,12 @@
     "grunt-protractor-runner": "^3.0.0",
     "grunt-shell-spawn": "^0.3.10",
     "jasmine-reporters": "^2.0.0",
+    "jasmine-spec-reporter": "^2.4.0",
     "mkdirp": "^0.5.1",
     "protractor": "^0.20.1",
-    "protractor-multicapabilities-htmlreporter": "0.0.5",
-    "python": "0.0.4",
+    "protractor-linkuisref-locator": "^1.1.2",
+    "q": "^1.4.1",
+    "webdriver-manager": "^8.0.0",
     "xml-writer": "^1.6.0"
   }
 }
