@@ -32,8 +32,8 @@ exports.config = {
 	 * This is usually what you would use in CI.
 	 * Alternatively, this can be set by command line using $ grunt --seleniumAddress http://192.168.99.100:4444/wd/hub
 	 * If passed by command line it will override the setting in this file
-	 /*
-	 //seleniumAddress : 'http://192.168.99.100:4444/wd/hub',
+	*/
+	 seleniumAddress : 'http://172.16.2.190:4444/wd/hub',
 
 	 /*
 	 * Application under test base URL.
