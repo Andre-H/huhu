@@ -4,12 +4,20 @@ var mkdirp = require('mkdirp');
 var SpecReporter = require('jasmine-spec-reporter');
 var jSonXMLReporter = require('../../src/js/xml-reporter.js');
 var HTMLScreenshotReporter = require('../../src/js/html-reporter.js');
-var htmlReporter = new HTMLScreenshotReporter({savePath : 'screenshots/'});
 var waitPlugin = require('../../src/js/wait-plugin.js');
 
 const targetDir = 'target';
-const htmlReportDestPath = './' + targetDir + '/protractor-e2e-report.html';
-const xmlReportDestPath = './' + targetDir + '/protractor-e2e-report.xml';
+
+var xmlReporter = new jSonXMLReporter({
+	title : 'Protractor End to End Test Results',
+	xmlReportDestPath : './' + targetDir + '/protractor-e2e-report.xml'
+});
+
+var htmlReporter = new HTMLScreenshotReporter({
+	savePath : 'screenshots/',
+	title : 'Protractor End to End Test Results',
+	htmlReportDestPath : './' + targetDir + '/protractor-e2e-report.html'
+});
 
 exports.config = {
 
@@ -33,7 +41,7 @@ exports.config = {
 	 * Alternatively, this can be set by command line using $ grunt --seleniumAddress http://192.168.99.100:4444/wd/hub
 	 * If passed by command line it will override the setting in this file
 	*/
-	 seleniumAddress : 'http://172.16.2.190:4444/wd/hub',
+	//seleniumAddress : 'http://172.16.2.190:4444/wd/hub',
 
 	 /*
 	 * Application under test base URL.
@@ -141,8 +149,8 @@ exports.config = {
 	afterLaunch : function (exitCode) {
 		return new Promise(function (resolve) {
 			console.log('jasmine afterLaunch - check your reports at ./' + targetDir);
-			htmlReporter.generateHtmlReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', htmlReportDestPath);
-			jSonXMLReporter.generateXMLReport('./target/protractor-e2e-results.json', 'Protractor End to End Test Results', xmlReportDestPath);
+			htmlReporter.generateHtmlReport(exports.config.resultJsonOutputFile);
+			xmlReporter.generateXMLReport(exports.config.resultJsonOutputFile);
 		});
 	}
 
