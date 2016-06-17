@@ -65,24 +65,62 @@ function HTMLScreenshotReporter(options) {
 			var browserName = reporter.getBrowserNameFromResult(jsonstr[q]);
 			var testName = reporter.getTestNameFromResult(jsonstr[q]);
 			var passed = reporter.determineTestStatus(jsonstr[q]);
+			var stack = [];
+			//if(passed == false){
+				stack = consolidateAllStackTraces(jsonstr[q]);
+			//}
 			allResults.push(passed);
 			testArray.push({
 				testName : testName,
 				browser : browserName,
 				res : passed,
-				duration: jsonstr[q].duration
+				duration: jsonstr[q].duration,
+				stackTrace:  stack
 			});
 		}
 
 		var result = '';
-		result += concatHeadSection();
+		result += '<!-- saved from url=(0014)about:internet -->';
+		result += '<!DOCTYPE html>';
 		result += '<html>';
+		result += concatHeadSection();
+		result += '<body>';
 		result += concatReportHeaderSection(automationHeader);
 		result += concatRunInfoSection(elapsedTime);
 		result += concatReportSummary(allResults);
 		result += concatSpecResults(testArray, browserArrayUnique);
+		result += '</body>';
 		result += '</html>';
 		return result;
+	}
+
+	function consolidateAllStackTraces (run){
+		//console.log('run.assertions.length'+run.assertions.length);
+		var assertions = run.assertions;
+		var assertionsArray = new Array();
+		var stk = [];
+		for (var i = 0; i < assertions.length; i++) {
+			//console.log('assertions['+i+'].passed:'+assertions[i].passed);
+			if(assertions[i].passed == false){
+
+				//console.log('falso saporra');
+				if(assertions[i].errorMsg){
+
+					//console.log('ah egua');
+					stk.push(assertions[i].errorMsg);
+				}
+				if(assertions[i].stackTrace){
+
+					//console.log('ah nego');
+					var stckTrc = assertions[i].stackTrace.split('\n');
+					for(var j=0; j<stckTrc.length; j++){
+						stk.push(stckTrc[j]);
+					}
+				}
+			}
+		}
+		//console.log(stk.length);
+		return stk;
 	}
 
 	function concatSpecResults(testArray, browsers){
@@ -105,15 +143,18 @@ function HTMLScreenshotReporter(options) {
 
 				result += '<tr><td>' + countIndex + '</td><td class="testname">' + scen + '</td>';
 
+				var exceptions = [];
 				for (var run in features[f][scen]) {
 					for (var b in browsers) {
 						var browserName = browsers[b];
+
 						if (browserName === features[f][scen][run].name) {
 							if (features[f][scen][run].status == "true") {
 								result += '<td class="pass">' + linkToScreenshot(scen, browserName) + 'PASS</a></td>';
 							}
 							if (features[f][scen][run].status == "false") {
-								result += '<td class="fail">' + linkToScreenshot(scen, browserName) + 'FAIL</a></td>';
+								result += '<td class="fail">FAIL ' + linkToScreenshot(scen, browserName) + 'screen shot</a> <a href="#" onclick="showhide(\''+runId(scen, browserName)+'\')">stack trace</a></td>';
+								exceptions.push(concatStackTrace(runId(scen, browserName), features[f][scen][run], browsers.length + 2));
 							}
 							if (features[f][scen][run].status == "Skipped") {
 								result += '<td class="skip">Skipped (test duration '+features[f][scen][run].duration+'ms)</td>';
@@ -121,13 +162,37 @@ function HTMLScreenshotReporter(options) {
 						}
 					}
 				}
-
 				result += '</tr>';
+				//console.log(exceptions);
+				if(exceptions.length > 0){
+					for(var i=0; i<exceptions.length; i++){
+						result += exceptions[i];
+					}
+				}
+
 			}
 
 			result += '</tr></table>';
 		}
 		return result;
+	}
+
+	function concatStackTrace(id, run, colspan){
+		//console.log(JSON.stringify(run));
+		var result = '';
+		if(run.stackTrace) {
+			if (run.stackTrace.length > 0) {
+				result += '<tr class="stack" style="display:none" id="' + id + '">' +
+					'<td colspan="' + colspan + '" style="background-color: #FFBBBB">' +
+					'<table class="stacker">' +
+					'<tr><td class="error">' + reporter.encodeEntities(run.stackTrace[0]) + '</td></tr>';
+				for (var i = 1; i < run.stackTrace.length; i++) {
+					result += '<tr><td>' + reporter.encodeEntities(run.stackTrace[i]) + '</td></tr>'
+				}
+				result += '</table></td></tr>';
+			}
+
+		}	return result;
 	}
 
 	function concatSpecTableHeader(featureName, sortedBrowsers){
@@ -140,7 +205,11 @@ function HTMLScreenshotReporter(options) {
 	}
 
 	function linkToScreenshot(scenarioName, browserName){
-		return '<a href="' + screenShotsDir + sanitizeFilename(scenarioName) + sanitizeFilename(browserName) + '.png">';
+		return '<a href="' + screenShotsDir + runId(scenarioName, browserName) + '.png">';
+	}
+
+	function runId(scenarioName, browserName){
+		return sanitizeFilename(scenarioName) + sanitizeFilename(browserName);
 	}
 
 	function copyResultsToFeatureCollection(resultArray){
@@ -163,7 +232,8 @@ function HTMLScreenshotReporter(options) {
 			featuresDummy[featureName][resultArray[i].testName][resultArray[i].browser] = {
 				name: resultArray[i].browser,
 				duration : resultArray[i].duration,
-				status : resultArray[i].res
+				status : resultArray[i].res,
+				stackTrace : resultArray[i].stackTrace
 			};
 		}
 		return featuresDummy;
@@ -172,7 +242,18 @@ function HTMLScreenshotReporter(options) {
 	function concatHeadSection(){
 		var result = '<head><meta http-equiv="Content-Type" content="text/html" />';
 		result += concatCssSection();
+		result += concatScriptSection();
 		result += '</head>';
+		return result;
+	}
+
+	function concatScriptSection(){
+		var result = '<script type="text/javascript">';
+		result += '	function showhide(id) {';
+		result += '		var e = document.getElementById(id);';
+		result += '		e.style.display = (e.style.display == "none") ? "table-row" : "none";';
+		result += '	}';
+		result += '	</script>';
 		return result;
 	}
 
@@ -270,6 +351,34 @@ function HTMLScreenshotReporter(options) {
 		result +='	border-color: #B3B3B3;';
 		result +='	color: #666666;';
 		result +='	padding: 2px;';
+		result +='}';
+		result +='tr.stack {';
+		result +='	display : none';
+		result +='}';
+		result +='table.stacker {';
+		result +='	font-size: 10px;';
+		result +='	width: 100%;';
+		result +='	border-style: solid;';
+		result +='	border-width: 1px;';
+		result +='	border-color: #CFCFCF;';
+		result +='}';
+		result +='table.stacker td {';
+		result +='	text-align: left;';
+		result +='	padding: 3px;';
+		result +='	padding-left:43px;';
+		result +='	color: #666666;';
+		result +='	border-style: none;';
+		result +='}';
+		result +='table.stacker td.error {';
+		result +='	text-align: left;';
+		result +='	color: #FF0000;';
+		result +='	padding: 3px;';
+		result +='	padding-left:13px;';
+		result +='	border-style: none;';
+		result +='}';
+		result +='table.stacker tr:nth-child(odd) {';
+		result +='	background-color: #F8F8F8;';
+		result +='}';
 		result += '</style>';
 		return result;
 	}
